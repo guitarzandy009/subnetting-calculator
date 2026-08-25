@@ -1,0 +1,7 @@
+[project]
+name = "subnetting-calculator"
+version = "0.1.0"
+description = "A calculator built with Python to learn network subnetting."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
