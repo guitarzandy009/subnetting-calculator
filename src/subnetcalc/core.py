@@ -34,3 +34,14 @@ def ip_to_int(ip: str) -> int:
 def int_to_ip(value: int) -> str:
     """Convert a 32-bit integer back to dotted-decimal IPv4 notation."""
     return ".".join(str((value >> shift) & 0xFF) for shift in (24, 16, 8, 0))
+
+def prefix_to_mask_int(prefix_length: int) -> int:
+    """Convert a prefix length (e.g. 24) into a 32-bit subnet mask integer."""
+    if not (0 <= prefix_length <= 32):
+        raise ValueError(f"Prefix length must be between 0 and 32: {prefix_length}")
+
+    return (0xFFFFFFFF << (32 - prefix_length)) & 0xFFFFFFFF
+
+def prefix_to_mask(prefix_length: int) -> str:
+    """Convert a prefix length (e.g. 24) into a dotted-decimal subnet mask."""
+    return int_to_ip(prefix_to_mask_int(prefix_length))
