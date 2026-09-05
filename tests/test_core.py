@@ -1,6 +1,6 @@
 import pytest
 
-from subnetcalc.core import parse_cidr
+from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip
 
 
 def test_parse_cidr_valid():
@@ -30,3 +30,31 @@ def test_parse_cidr_octet_out_of_range():
 def test_parse_cidr_prefix_out_of_range():
     with pytest.raises(ValueError, match="Invalid prefix"):
         parse_cidr("192.168.1.0/33")
+
+def test_ip_to_int_basic():
+    assert ip_to_int("192.168.1.1") == 3232235777
+
+
+def test_ip_to_int_zero():
+    assert ip_to_int("0.0.0.0") == 0
+
+
+def test_ip_to_int_max():
+    assert ip_to_int("255.255.255.255") == 4294967295
+
+
+def test_int_to_ip_basic():
+    assert int_to_ip(3232235777) == "192.168.1.1"
+
+
+def test_int_to_ip_zero():
+    assert int_to_ip(0) == "0.0.0.0"
+
+
+def test_int_to_ip_max():
+    assert int_to_ip(4294967295) == "255.255.255.255"
+
+
+def test_ip_to_int_and_back_round_trip():
+    original = "10.20.30.40"
+    assert int_to_ip(ip_to_int(original)) == original
