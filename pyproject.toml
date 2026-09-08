@@ -17,3 +17,6 @@ packages = ["src/subnetcalc"]
 dev = [
     "pytest>=9.1.1",
 ]
+
+[project.scripts]
+subnetcalc = "subnetcalc.cli:main"

@@ -89,3 +89,28 @@ def usable_host_count(prefix_length: int) -> int:
 
     host_bits = 32 - prefix_length
     return (2 ** host_bits) - 2
+
+def subnet_summary(cidr: str) -> dict:
+    """Given a CIDR string, return a dict with the full subnet breakdown."""
+    ip, prefix_length = parse_cidr(cidr)
+
+    summary = {
+        "input": cidr,
+        "ip_address": ip,
+        "prefix_length": prefix_length,
+        "subnet_mask": prefix_to_mask(prefix_length),
+        "network_address": network_address(ip, prefix_length),
+        "broadcast_address": broadcast_address(ip, prefix_length),
+        "usable_host_count": usable_host_count(prefix_length),
+    }
+
+    if prefix_length < 31:
+        first, last = usable_host_range(ip, prefix_length)
+        summary["first_usable"] = first
+        summary["last_usable"] = last
+    else:
+        summary["first_usable"] = None
+        summary["last_usable"] = None
+
+    return summary
+

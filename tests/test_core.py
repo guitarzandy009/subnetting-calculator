@@ -1,6 +1,6 @@
 import pytest
 
-from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address, usable_host_range, usable_host_count
+from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address, usable_host_range, usable_host_count, subnet_summary
 
 
 def test_parse_cidr_valid():
@@ -199,3 +199,24 @@ def test_usable_host_count_invalid_negative():
 def test_usable_host_count_invalid_too_large():
     with pytest.raises(ValueError, match="between 0 and 32"):
         usable_host_count(33)
+
+def test_subnet_summary_slash_24():
+    summary = subnet_summary("192.168.1.0/24")
+    assert summary["network_address"] == "192.168.1.0"
+    assert summary["broadcast_address"] == "192.168.1.255"
+    assert summary["subnet_mask"] == "255.255.255.0"
+    assert summary["first_usable"] == "192.168.1.1"
+    assert summary["last_usable"] == "192.168.1.254"
+    assert summary["usable_host_count"] == 254
+
+
+def test_subnet_summary_slash_32_no_usable_range():
+    summary = subnet_summary("192.168.1.5/32")
+    assert summary["first_usable"] is None
+    assert summary["last_usable"] is None
+    assert summary["usable_host_count"] == 0
+
+
+def test_subnet_summary_invalid_cidr_raises():
+    with pytest.raises(ValueError):
+        subnet_summary("garbage")
