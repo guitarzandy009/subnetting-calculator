@@ -53,3 +53,11 @@ def network_address(ip: str, prefix_length: int) -> str:
     mask_int = prefix_to_mask_int(prefix_length)
     network_int = ip_int & mask_int
     return int_to_ip(network_int)
+
+def broadcast_address(ip: str, prefix_length: int) -> str:
+    """Given an IP and prefix length, return the broadcast address."""
+    ip_int = ip_to_int(ip)
+    mask_int = prefix_to_mask_int(prefix_length)
+    host_mask = ~mask_int & 0xFFFFFFFF
+    broadcast_int = ip_int | host_mask
+    return int_to_ip(broadcast_int)
