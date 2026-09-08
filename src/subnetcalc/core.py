@@ -75,3 +75,17 @@ def usable_host_range(ip: str, prefix_length: int) -> tuple[str, str]:
     last_usable = int_to_ip(broadcast_int - 1)
 
     return first_usable, last_usable
+
+
+def usable_host_count(prefix_length: int) -> int:
+    """Given a prefix length, return the number of usable host addresses."""
+    if not (0 <= prefix_length <= 32):
+        raise ValueError(f"Prefix length must be between 0 and 32: {prefix_length}")
+
+    if prefix_length == 32:
+        return 0
+    if prefix_length == 31:
+        return 2
+
+    host_bits = 32 - prefix_length
+    return (2 ** host_bits) - 2

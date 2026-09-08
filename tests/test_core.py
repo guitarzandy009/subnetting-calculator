@@ -1,6 +1,6 @@
 import pytest
 
-from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address, usable_host_range
+from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address, usable_host_range, usable_host_count
 
 
 def test_parse_cidr_valid():
@@ -165,3 +165,37 @@ def test_usable_host_range_slash_31_raises():
 def test_usable_host_range_slash_32_raises():
     with pytest.raises(ValueError, match="No usable host range"):
         usable_host_range("192.168.1.5", 32)
+
+
+def test_usable_host_count_slash_24():
+    assert usable_host_count(24) == 254
+
+
+def test_usable_host_count_slash_26():
+    assert usable_host_count(26) == 62
+
+
+def test_usable_host_count_slash_30():
+    assert usable_host_count(30) == 2
+
+
+def test_usable_host_count_slash_31():
+    assert usable_host_count(31) == 2
+
+
+def test_usable_host_count_slash_32():
+    assert usable_host_count(32) == 0
+
+
+def test_usable_host_count_slash_0():
+    assert usable_host_count(0) == 4294967294
+
+
+def test_usable_host_count_invalid_negative():
+    with pytest.raises(ValueError, match="between 0 and 32"):
+        usable_host_count(-1)
+
+
+def test_usable_host_count_invalid_too_large():
+    with pytest.raises(ValueError, match="between 0 and 32"):
+        usable_host_count(33)
