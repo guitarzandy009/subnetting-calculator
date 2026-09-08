@@ -61,3 +61,17 @@ def broadcast_address(ip: str, prefix_length: int) -> str:
     host_mask = ~mask_int & 0xFFFFFFFF
     broadcast_int = ip_int | host_mask
     return int_to_ip(broadcast_int)
+
+
+def usable_host_range(ip: str, prefix_length: int) -> tuple[str, str]:
+    """Given an IP and prefix length, return (first_usable, last_usable) as strings."""
+    if prefix_length >= 31:
+        raise ValueError("No usable host range for /31 or /32 subnets")
+
+    network_int = ip_to_int(network_address(ip, prefix_length))
+    broadcast_int = ip_to_int(broadcast_address(ip, prefix_length))
+
+    first_usable = int_to_ip(network_int + 1)
+    last_usable = int_to_ip(broadcast_int - 1)
+
+    return first_usable, last_usable

@@ -1,6 +1,6 @@
 import pytest
 
-from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address
+from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address, broadcast_address, usable_host_range
 
 
 def test_parse_cidr_valid():
@@ -143,3 +143,25 @@ def test_broadcast_address_slash_32():
 
 def test_broadcast_address_slash_0():
     assert broadcast_address("192.168.1.55", 0) == "255.255.255.255"
+
+
+def test_usable_host_range_slash_24():
+    assert usable_host_range("192.168.1.5", 24) == ("192.168.1.1", "192.168.1.254")
+
+
+def test_usable_host_range_slash_26():
+    assert usable_host_range("172.16.5.200", 26) == ("172.16.5.193", "172.16.5.254")
+
+
+def test_usable_host_range_slash_30():
+    assert usable_host_range("10.0.0.9", 30) == ("10.0.0.9", "10.0.0.10")
+
+
+def test_usable_host_range_slash_31_raises():
+    with pytest.raises(ValueError, match="No usable host range"):
+        usable_host_range("192.168.1.5", 31)
+
+
+def test_usable_host_range_slash_32_raises():
+    with pytest.raises(ValueError, match="No usable host range"):
+        usable_host_range("192.168.1.5", 32)
