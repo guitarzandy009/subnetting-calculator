@@ -157,9 +157,8 @@ def test_usable_host_range_slash_30():
     assert usable_host_range("10.0.0.9", 30) == ("10.0.0.9", "10.0.0.10")
 
 
-def test_usable_host_range_slash_31_raises():
-    with pytest.raises(ValueError, match="No usable host range"):
-        usable_host_range("192.168.1.5", 31)
+def test_usable_host_range_slash_31():
+    assert usable_host_range("192.168.1.0", 31) == ("192.168.1.0", "192.168.1.1")
 
 
 def test_usable_host_range_slash_32_raises():
@@ -220,3 +219,8 @@ def test_subnet_summary_slash_32_no_usable_range():
 def test_subnet_summary_invalid_cidr_raises():
     with pytest.raises(ValueError):
         subnet_summary("garbage")
+
+def test_subnet_summary_slash_31():
+    summary = subnet_summary("192.168.1.0/31")
+    assert summary["first_usable"] == "192.168.1.0"
+    assert summary["last_usable"] == "192.168.1.1"

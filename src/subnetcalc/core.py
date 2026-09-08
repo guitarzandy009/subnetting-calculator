@@ -65,11 +65,17 @@ def broadcast_address(ip: str, prefix_length: int) -> str:
 
 def usable_host_range(ip: str, prefix_length: int) -> tuple[str, str]:
     """Given an IP and prefix length, return (first_usable, last_usable) as strings."""
-    if prefix_length >= 31:
-        raise ValueError("No usable host range for /31 or /32 subnets")
+    if prefix_length == 32:
+        raise ValueError("No usable host range for /32 subnets")
 
-    network_int = ip_to_int(network_address(ip, prefix_length))
-    broadcast_int = ip_to_int(broadcast_address(ip, prefix_length))
+    network = network_address(ip, prefix_length)
+    broadcast = broadcast_address(ip, prefix_length)
+
+    if prefix_length == 31:
+        return network, broadcast
+
+    network_int = ip_to_int(network)
+    broadcast_int = ip_to_int(broadcast)
 
     first_usable = int_to_ip(network_int + 1)
     last_usable = int_to_ip(broadcast_int - 1)
@@ -104,7 +110,7 @@ def subnet_summary(cidr: str) -> dict:
         "usable_host_count": usable_host_count(prefix_length),
     }
 
-    if prefix_length < 31:
+    if prefix_length < 32:
         first, last = usable_host_range(ip, prefix_length)
         summary["first_usable"] = first
         summary["last_usable"] = last
