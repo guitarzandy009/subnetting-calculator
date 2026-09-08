@@ -45,3 +45,11 @@ def prefix_to_mask_int(prefix_length: int) -> int:
 def prefix_to_mask(prefix_length: int) -> str:
     """Convert a prefix length (e.g. 24) into a dotted-decimal subnet mask."""
     return int_to_ip(prefix_to_mask_int(prefix_length))
+
+
+def network_address(ip: str, prefix_length: int) -> str:
+    """Given an IP and prefix length, return the network address."""
+    ip_int = ip_to_int(ip)
+    mask_int = prefix_to_mask_int(prefix_length)
+    network_int = ip_int & mask_int
+    return int_to_ip(network_int)

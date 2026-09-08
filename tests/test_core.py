@@ -1,6 +1,6 @@
 import pytest
 
-from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask
+from subnetcalc.core import parse_cidr, ip_to_int, int_to_ip, prefix_to_mask_int, prefix_to_mask, network_address
 
 
 def test_parse_cidr_valid():
@@ -99,3 +99,27 @@ def test_prefix_to_mask_zero():
 
 def test_prefix_to_mask_max():
     assert prefix_to_mask(32) == "255.255.255.255"
+
+
+def test_network_address_slash_24():
+    assert network_address("192.168.1.122", 24) == "192.168.1.0"
+
+
+def test_network_address_slash_16():
+    assert network_address("10.5.130.7", 16) == "10.5.0.0"
+
+
+def test_network_address_slash_26():
+    assert network_address("172.16.5.200", 26) == "172.16.5.192"
+
+
+def test_network_address_already_network():
+    assert network_address("192.168.1.0", 24) == "192.168.1.0"
+
+
+def test_network_address_slash_32():
+    assert network_address("192.168.1.55", 32) == "192.168.1.55"
+
+
+def test_network_address_slash_0():
+    assert network_address("192.168.1.55", 0) == "0.0.0.0"
