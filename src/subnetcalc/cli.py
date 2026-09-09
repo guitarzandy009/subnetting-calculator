@@ -4,6 +4,7 @@ from subnetcalc.core import subnet_summary
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the argparse parser for the subnetcalc CLI."""
     parser = argparse.ArgumentParser(
         prog="subnetcalc",
         description="Calculate subnet details from an IPv4 address in CIDR notation.",
@@ -16,6 +17,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    """Parse command-line arguments, compute the subnet summary, and print it."""
     parser = build_parser()
     args = parser.parse_args()
 

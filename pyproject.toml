@@ -20,3 +20,4 @@ dev = [
 
 [project.scripts]
 subnetcalc = "subnetcalc.cli:main"
+subnetcalc-gui = "subnetcalc.gui:main"
