@@ -56,12 +56,14 @@ uv run pytest -v
 
 ## Project structure
 
+```
 src/subnetcalc/
 ├── core.py # subnetting logic (pure stdlib, no dependencies)
 ├── cli.py # command-line interface
 └── gui.py # Tkinter GUI
 tests/
 └── test_core.py
+```
 
 The core logic is deliberately kept independent of any interface, so the same tested functions power the CLI, the GUI, and (planned) a web version.
 
